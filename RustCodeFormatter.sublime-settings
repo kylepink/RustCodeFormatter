@@ -1,0 +1,4 @@
+{
+    // location/command for rustfmt - external rust formatter program
+    "rustfmt_bin": "rustfmt"
+}
