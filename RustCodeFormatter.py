@@ -63,7 +63,6 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
             line = self.view.substr(region)
             cursor += len(line)
             proc.stdin.write(line.encode("utf8"))
-        proc.stdin.close()
 
         (data, errdata) = proc.communicate()
         return_code = proc.wait()
