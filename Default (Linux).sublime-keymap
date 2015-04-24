@@ -1,5 +1,5 @@
 [
     {
-        "keys": ["ctrl+shift+l"], "command": "rust_code_formatter"
+        "keys": ["ctrl+\\"], "command": "rust_code_formatter"
     }
 ]
