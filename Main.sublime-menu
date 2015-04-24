@@ -14,17 +14,13 @@
                         "children":
                         [
                             {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/RustCodeFormatter/RustCodeFormatter.sublime-settings"
-                                },
+                                "command": "open_file",
+                                "args": { "file": "${packages}/RustCodeFormatter/RustCodeFormatter.sublime-settings" },
                                 "caption": "Settings – Default"
                             },
                             {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/User/RustCodeFormatter.sublime-settings"
-                                },
+                                "command": "open_file",
+                                "args": { "file": "${packages}/User/RustCodeFormatter.sublime-settings" },
                                 "caption": "Settings – User"
                             },
                             { "caption": "-" }

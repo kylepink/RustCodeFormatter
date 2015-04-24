@@ -4,7 +4,6 @@ from subprocess import PIPE, Popen
 settings = None
 rustfmt_bin = None
 
-# note: plugin_loaded/plugin_unloaded only called automatically in ST3
 def plugin_loaded():
     load_settings()
 
@@ -15,7 +14,7 @@ def load_settings():
     global settings
     global rustfmt_bin
 
-    settings = sublime.load_settings("RustFormatter.sublime-settings")
+    settings = sublime.load_settings("RustCodeFormatter.sublime-settings")
     rustfmt_bin = settings.get("rustfmt_bin", "rustfmt")
     settings.add_on_change("rustfmt_bin", settings_changed)
 
@@ -75,7 +74,7 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
             sublime.status_message("Rust formatter: rustfmt process call failed. See log for details.")
             return
 
-        json_data = json.loads(data)
+        json_data = json.loads(data.decode("utf-8"))
 
         for replacement in reversed(json_data):
             region = sublime.Region(replacement["start_character"], replacement["end_character"])
