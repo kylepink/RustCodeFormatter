@@ -2,7 +2,7 @@ import sublime, sublime_plugin, json, os, subprocess
 from subprocess import PIPE, Popen
 
 settings = None
-rustfmt_bin = None
+rust_style_bin = None
 
 def plugin_loaded():
     load_settings()
@@ -12,20 +12,20 @@ def plugin_unloaded():
 
 def load_settings():
     global settings
-    global rustfmt_bin
+    global rust_style_bin
 
     settings = sublime.load_settings("RustCodeFormatter.sublime-settings")
-    rustfmt_bin = settings.get("rustfmt_bin", "rustfmt")
-    settings.add_on_change("rustfmt_bin", settings_changed)
+    rust_style_bin = settings.get("rust_style_bin", "rust-style")
+    settings.add_on_change("rust_style_bin", settings_changed)
 
 def unload_settings():
     global settings
-    global rustfmt_bin
+    global rust_style_bin
     
     if settings != None:
-        settings.clear_on_change("rustfmt_bin")
+        settings.clear_on_change("rust_style_bin")
         settings = None
-        rustfmt_bin = None
+        rust_style_bin = None
 
 def settings_changed():
     unload_settings()
@@ -44,7 +44,7 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
 
         # constructs command
         cmd = list()
-        cmd.append(rustfmt_bin)
+        cmd.append(rust_style_bin)
         cmd.append("--output-replacements-json")
 
         # cmd display fix for windows
@@ -70,7 +70,7 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
         if return_code != 0:
             print("Rust Formatter error data:\n")
             print(errdata)
-            sublime.status_message("Rust formatter: rustfmt process call failed. See log for details.")
+            sublime.status_message("Rust formatter: rust-style process call failed. See log for details.")
             return
 
         json_data = json.loads(data.decode("utf-8"))
