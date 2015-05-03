@@ -41,6 +41,12 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
         cmd.append(rust_style_bin)
         cmd.append("--output-replacements-json")
 
+        # adds line ranges to command
+        for selection in self.view.sel():
+            (line_start, _) = self.view.rowcol(selection.a)
+            (line_end, _) = self.view.rowcol(selection.b)
+            # adds lines ranges to command as 1-based ranges
+            cmd.append("--lines={0}:{1}".format(line_start + 1, line_end + 1))
         # cmd display fix for windows
         start_info = None
         if os.name == 'nt':
