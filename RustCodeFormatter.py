@@ -35,12 +35,6 @@ class RustCodeFormatterCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         if settings == None:
             load_settings()
-        # TODO: SHOULD BE IMPLEMENTED THROUGH SUBLIME?
-        # only allows formatting if .rs extension
-        file_name = self.view.file_name()
-        if file_name == None or file_name[-3:] != ".rs":
-            sublime.status_message("Cannot rust format non .rs files.")
-            return
 
         # constructs command
         cmd = list()
