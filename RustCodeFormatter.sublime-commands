@@ -1,0 +1,4 @@
+[
+    { "caption": "Rust Code Formatter: Format Selection", "command": "rust_code_formatter_format" },
+    { "caption": "Rust Code Formatter: Set Path", "command": "rust_code_formatter_set_path" }
+]

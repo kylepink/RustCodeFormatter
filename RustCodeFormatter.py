@@ -1,6 +1,7 @@
 import sublime, sublime_plugin, json, os, subprocess
 from subprocess import PIPE, Popen
 
+settings_file = "RustCodeFormatter.sublime-settings"
 settings = None
 rust_style_bin = None
 
@@ -14,7 +15,7 @@ def load_settings():
     global settings
     global rust_style_bin
 
-    settings = sublime.load_settings("RustCodeFormatter.sublime-settings")
+    settings = sublime.load_settings(settings_file)
     rust_style_bin = settings.get("rust_style_bin", "rust-style")
     settings.add_on_change("rust_style_bin", settings_changed)
 
@@ -31,7 +32,31 @@ def settings_changed():
     unload_settings()
     load_settings()
 
-class RustCodeFormatterCommand(sublime_plugin.TextCommand):
+def set_binary_path(path):
+    global rust_style_bin
+
+    if settings == None:
+        load_settings()
+
+    rust_style_bin = path
+    settings.set("rust_style_bin", path)
+    sublime.save_settings(settings_file)
+
+
+class RustCodeFormatterSetPathCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        if settings == None:
+            load_settings()
+        window = sublime.active_window()
+        window.show_input_panel(
+            "Path to rust-style: ",
+            rust_style_bin,
+            set_binary_path,
+            None,
+            None
+        )
+
+class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         if settings == None:
             load_settings()
