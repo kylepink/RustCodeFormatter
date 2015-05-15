@@ -72,6 +72,13 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
             (line_end, _) = self.view.rowcol(selection.b)
             # adds lines ranges to command as 1-based ranges
             cmd.append("--lines={0}:{1}".format(line_start + 1, line_end + 1))
+
+        # appends file location to command, this is where it will start style search
+        file_location = self.view.file_name()
+        if file_location != None:
+            cmd.append("--file-location")
+            cmd.append(file_location)
+
         # cmd display fix for windows
         start_info = None
         if os.name == 'nt':
