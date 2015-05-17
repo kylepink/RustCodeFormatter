@@ -22,7 +22,7 @@ def load_settings():
 def unload_settings():
     global settings
     global rust_style_bin
-    
+
     if settings != None:
         settings.clear_on_change("rust_style_bin")
         settings = None
@@ -68,8 +68,8 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
 
         # adds line ranges to command
         for selection in self.view.sel():
-            (line_start, _) = self.view.rowcol(selection.a)
-            (line_end, _) = self.view.rowcol(selection.b)
+            (line_start, _) = self.view.rowcol(selection.begin())
+            (line_end, _) = self.view.rowcol(selection.end())
             # adds lines ranges to command as 1-based ranges
             cmd.append("--lines={0}:{1}".format(line_start + 1, line_end + 1))
 
