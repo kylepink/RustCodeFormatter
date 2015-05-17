@@ -11,13 +11,13 @@ RustCodeFromatter is a plugin for Sublime Text 3 (may also work for ST2) which a
     1. Open the command pallete by pressing ```Ctrl+Shift+P``` or through the menu ```Tools -> Command Pallete```.
     2. Enter/select ```Rust Code Formatter: Set Path```.
     3. An input field will appear with the default content ```rust-style```. Replace with an absolute path, ie ```C:\directory\rust-style.exe``` and press enter.
-3. (Optional, otherwise hardcoded style defaults are used) To setup custom style preferences place a customised ```.rust-style.toml``` style file within the root directory of your project. Multiple different style files could be used within one project or a single style file could be used for all your projects. See [rust-style][1] for the details.
-4. (Optional, default key binding is ```ctrl + \```) To change the key binding, open menu ```Preferences -> Key Bindings - User``` and add the following, substituting with your own key preference:
+3. (Optional) To setup custom style preferences place a customised ```.rust-style.toml``` style file within the root directory of your project. See [rust-style][1] for the details.
+4. (Optional) To change the key binding, open menu ```Preferences -> Key Bindings - User``` and add the following, substituting with your own key preference:
 ````
 [
     {
         "keys": ["ctrl+\\"], "command": "rust_code_formatter",
-        "context": 
+        "context":
         [
             {"key": "selector", "operator": "equal", "operand": "source.rust"}
         ]
