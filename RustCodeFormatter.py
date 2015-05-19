@@ -32,17 +32,6 @@ def settings_changed():
     unload_settings()
     load_settings()
 
-def set_binary_path(path):
-    global rust_style_bin
-
-    if settings == None:
-        load_settings()
-
-    rust_style_bin = path
-    settings.set("rust_style_bin", path)
-    sublime.save_settings(settings_file)
-
-
 class RustCodeFormatterSetPathCommand(sublime_plugin.WindowCommand):
     def run(self):
         if settings == None:
@@ -55,6 +44,110 @@ class RustCodeFormatterSetPathCommand(sublime_plugin.WindowCommand):
             None,
             None
         )
+
+def set_binary_path(path):
+    global rust_style_bin
+
+    if settings == None:
+        load_settings()
+
+    rust_style_bin = path
+    settings.set("rust_style_bin", path)
+    sublime.save_settings(settings_file)
+
+class RustCodeFormatterAddNewStyleCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        window = sublime.active_window()
+        folders = window.folders()
+        if len(folders) > 0:
+            pick_directory()
+        else:
+            get_custom_directory()
+        
+def pick_directory():
+    window = sublime.active_window()
+    folders = window.folders()
+    folders.append("Other...")
+
+    window.show_quick_panel(
+        folders,
+        process_pick,
+        0,
+        0,
+        None
+    )
+
+def process_pick(index):
+    if index == -1:
+        return
+
+    window = sublime.active_window()
+    folders = window.folders()
+    if index >= len(folders):
+        get_custom_directory()
+    else:
+        add_new_style_file(folders[index])
+
+def get_custom_directory():
+    window = sublime.active_window()
+    default_text = ""
+    folders = window.folders()
+    if len(folders) > 0:
+        default_text = folders[0]
+
+    window.show_input_panel(
+        "Directory for new style file: ",
+        default_text,
+        add_new_style_file,
+        None,
+        None
+    )
+
+def add_new_style_file(directory):
+    file_name = directory
+    if file_name[-1] != "/" and file_name[-1] != "\\":
+        file_name += os.sep
+    file_name += ".rust-style.toml"
+
+    # constructs command
+    cmd = list()
+    cmd.append(rust_style_bin)
+    cmd.append("--dump-style")
+
+    # cmd display fix for windows
+    start_info = None
+    if os.name == "nt":
+        start_info = subprocess.STARTUPINFO()
+        start_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+    # starts process
+    proc = Popen(cmd, stdout=PIPE, stdin=None, stderr=PIPE, startupinfo=start_info)
+    (data, errdata) = proc.communicate()
+    return_code = proc.wait()
+
+    if return_code != 0:
+        print("Error occurred while obtaining default style:")
+        print(errdata)
+        sublime.error_message("Rust formatter: rust-style process call failed. See log for details.")
+        return
+
+    # writes style file
+    try:
+        file = open(file_name, "w")
+    except FileNotFoundError:
+        sublime.error_message("Rust formatter: directory specified does not exist.")
+    except PermissionError:
+        sublime.error_message("Rust formatter: dnsufficient permissions to write style file.")
+    except:
+        sublime.error_message("Rust formatter: the new style file could not be created.")
+    else:
+        try:
+            file.write(data.decode("utf-8"))
+            file.flush()
+        except:
+            sublime.error_message("Rust formatter: an error was encountered while writing the style file.")
+        finally:
+            file.close()
 
 class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -81,7 +174,7 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
 
         # cmd display fix for windows
         start_info = None
-        if os.name == 'nt':
+        if os.name == "nt":
             start_info = subprocess.STARTUPINFO()
             start_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
@@ -102,7 +195,7 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
         if return_code != 0:
             print("Rust Formatter error data:\n")
             print(errdata)
-            sublime.status_message("Rust formatter: rust-style process call failed. See log for details.")
+            sublime.error_message("Rust formatter: rust-style process call failed. See log (ctrl + `) for details.")
             return
 
         json_data = json.loads(data.decode("utf-8"))
