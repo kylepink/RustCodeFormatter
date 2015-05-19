@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, json, os, subprocess
+import sublime, sublime_plugin, json, os, subprocess, distutils.spawn
 from subprocess import PIPE, Popen
 
 settings_file = "RustCodeFormatter.sublime-settings"
@@ -32,18 +32,34 @@ def settings_changed():
     unload_settings()
     load_settings()
 
+def is_binary_ok():
+    if distutils.spawn.find_executable(rust_style_bin) == None:
+        set_path = sublime.ok_cancel_dialog(
+            "The rust-style binary could not be found, set absolute path?",
+            "Set Path"
+        )
+
+        if set_path:
+            request_binary_path()
+        return False
+    else:
+        return True
+
 class RustCodeFormatterSetPathCommand(sublime_plugin.WindowCommand):
     def run(self):
-        if settings == None:
-            load_settings()
-        window = sublime.active_window()
-        window.show_input_panel(
-            "Path to rust-style: ",
-            rust_style_bin,
-            set_binary_path,
-            None,
-            None
-        )
+        request_binary_path()
+
+def request_binary_path():
+    if settings == None:
+        load_settings()
+    window = sublime.active_window()
+    window.show_input_panel(
+        "Path to rust-style: ",
+        rust_style_bin,
+        set_binary_path,
+        None,
+        None
+    )
 
 def set_binary_path(path):
     global rust_style_bin
@@ -57,6 +73,9 @@ def set_binary_path(path):
 
 class RustCodeFormatterAddNewStyleCommand(sublime_plugin.WindowCommand):
     def run(self):
+        if not is_binary_ok():
+            return
+
         window = sublime.active_window()
         folders = window.folders()
         if len(folders) > 0:
@@ -151,6 +170,9 @@ def add_new_style_file(directory):
 
 class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
+        if not is_binary_ok():
+            return
+
         if settings == None:
             load_settings()
 
