@@ -32,10 +32,10 @@ def settings_changed():
     unload_settings()
     load_settings()
 
-def is_binary_ok():
+def check_style_binary():
     if distutils.spawn.find_executable(rust_style_bin) == None:
         set_path = sublime.ok_cancel_dialog(
-            "The rust-style binary could not be found, set absolute path?",
+            "The rust-style binary could not be found, set path for rust-style?",
             "Set Path"
         )
 
@@ -73,7 +73,7 @@ def set_binary_path(path):
 
 class RustCodeFormatterAddNewStyleCommand(sublime_plugin.WindowCommand):
     def run(self):
-        if not is_binary_ok():
+        if not check_style_binary():
             return
 
         window = sublime.active_window()
@@ -167,10 +167,12 @@ def add_new_style_file(directory):
             sublime.error_message("Rust formatter: an error was encountered while writing the style file.")
         finally:
             file.close()
+            window = sublime.active_window()
+            window.open_file(file_name, 0)
 
 class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not is_binary_ok():
+        if not check_style_binary():
             return
 
         if settings == None:
