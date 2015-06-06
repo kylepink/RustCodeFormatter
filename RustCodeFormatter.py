@@ -3,7 +3,7 @@ from subprocess import PIPE, Popen
 
 settings_file = "RustCodeFormatter.sublime-settings"
 settings = None
-rust_style_bin = None
+rust_style_binary = None
 
 def plugin_loaded():
     load_settings()
@@ -13,27 +13,27 @@ def plugin_unloaded():
 
 def load_settings():
     global settings
-    global rust_style_bin
+    global rust_style_binary
 
     settings = sublime.load_settings(settings_file)
-    rust_style_bin = settings.get("rust_style_bin", "rust-style")
-    settings.add_on_change("rust_style_bin", settings_changed)
+    rust_style_binary = settings.get("rust_style_binary", "rust-style")
+    settings.add_on_change("rust_style_binary", settings_changed)
 
 def unload_settings():
     global settings
-    global rust_style_bin
+    global rust_style_binary
 
     if settings != None:
-        settings.clear_on_change("rust_style_bin")
+        settings.clear_on_change("rust_style_binary")
         settings = None
-        rust_style_bin = None
+        rust_style_binary = None
 
 def settings_changed():
     unload_settings()
     load_settings()
 
 def check_style_binary():
-    if distutils.spawn.find_executable(rust_style_bin) == None:
+    if distutils.spawn.find_executable(rust_style_binary) == None:
         set_path = sublime.ok_cancel_dialog(
             "The rust-style binary could not be found, set path for rust-style?",
             "Set Path"
@@ -55,20 +55,20 @@ def request_binary_path():
     window = sublime.active_window()
     window.show_input_panel(
         "Path to rust-style: ",
-        rust_style_bin,
+        rust_style_binary,
         set_binary_path,
         None,
         None
     )
 
 def set_binary_path(path):
-    global rust_style_bin
+    global rust_style_binary
 
     if settings == None:
         load_settings()
 
-    rust_style_bin = path
-    settings.set("rust_style_bin", path)
+    rust_style_binary = path
+    settings.set("rust_style_binary", path)
     sublime.save_settings(settings_file)
 
 class RustCodeFormatterAddNewStyleCommand(sublime_plugin.WindowCommand):
@@ -130,7 +130,7 @@ def add_new_style_file(directory):
 
     # constructs command
     cmd = list()
-    cmd.append(rust_style_bin)
+    cmd.append(rust_style_binary)
     cmd.append("--dump-style")
 
     # cmd display fix for windows
@@ -180,7 +180,7 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
 
         # constructs command
         cmd = list()
-        cmd.append(rust_style_bin)
+        cmd.append(rust_style_binary)
         cmd.append("--output-replacements-json")
 
         # adds line ranges to command

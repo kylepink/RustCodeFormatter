@@ -1,4 +1,3 @@
 {
-    // location/command for rust-style - external rust formatter program
-    "rust_style_bin": "rust-style"
+    "rust_style_binary": "rust-style"
 }
