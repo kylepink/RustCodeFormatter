@@ -211,14 +211,14 @@ class RustCodeFormatterFormatCommand(sublime_plugin.TextCommand):
             region = self.view.full_line(cursor)
             line = self.view.substr(region)
             cursor += len(line)
-            proc.stdin.write(line.encode("utf8"))
+            proc.stdin.write(line.encode("utf-8"))
 
         (data, errdata) = proc.communicate()
         return_code = proc.wait()
 
         if return_code != 0:
             print("Rust Formatter error data:\n")
-            print(errdata)
+            print(errdata.decode("utf-8"))
             sublime.error_message("Rust formatter: rust-style process call failed. See log (ctrl + `) for details.")
             return
 
