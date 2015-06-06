@@ -1,5 +1,5 @@
 # RustCodeFormatter
-RustCodeFromatter is a plugin for Sublime Text 3 (may also work for ST2) which allows the formatting of rust code. This plugin is a binding for [rust-style][1]. The default key to format selected lines is ```ctrl+\```. See issues section below for limitations.
+RustCodeFromatter is a plugin for Sublime Text 3 which allows the formatting of rust code. This plugin is a binding for [rust-style][1]. The default key to format selected lines is ```ctrl+\```. See issues section below for limitations.
 
 ## Requirements
 1. The project [rust-style][1] must be compiled.
