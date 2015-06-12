@@ -1,7 +1,7 @@
 [
     {
-        "keys": ["ctrl+\\"], "command": "rust_code_formatter_format",
-        "context": 
+        "keys": ["ctrl+k", "ctrl+f"], "command": "rust_code_formatter_format",
+        "context":
         [
             {"key": "selector", "operator": "equal", "operand": "source.rust"}
         ]

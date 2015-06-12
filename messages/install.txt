@@ -1,0 +1,23 @@
+RustCodeFromatter is a plugin for Sublime Text 3 which allows the formatting of
+rust code. This plugin is a binding for rust-style. rust-style is a work in
+progress and still has formatting issues and bugs.
+
+The default key to format selected lines is "ctrl+k, ctrl+f". 
+
+Setup
+------------
+1. Install the Rust sublime package (for syntax highlighting):
+   https://sublime.wbond.net/packages/Rust
+2. Clone and compile rust-style: https://github.com/sp0/rust-style
+3. Either place the built rust-style executable into your search path,
+   or alternatively configure the absolute path of rust-style:
+      1. Open the command pallete by pressing "Ctrl+Shift+P" or through the menu
+         Tools -> Command Pallete.
+      2. Enter/select "Rust Code Formatter: Set Path".
+      3. An input field will appear with the default content "rust-style".
+         Replace with an absolute path, ie "C:\directory\rust-style.exe" and
+         press enter.
+
+For further configuration (hotkeys, formatting options):
+    https://github.com/kylepink/RustCodeFormatter
+    https://github.com/sp0/rust-style
